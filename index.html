@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RIVIERA · PUL</title>
 <meta name="theme-color" content="#0b1626">
-<link rel="manifest" href='data:application/manifest+json,{"name":"RIVIERA","short_name":"RIVIERA","start_url":".","display":"standalone","background_color":"%230b1626","theme_color":"%230b1626","icons":[{"src":"https://cdn-icons-png.flaticon.com/192/2active.png","sizes":"192x192","type":"image/png"}]}'>
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2331/2331941.png">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2331/2331941.png">
+<link rel="manifest" href='data:application/manifest+json,{"name":"RIVIERA","short_name":"RIVIERA","start_url":"./","display":"standalone","background_color":"%230b1626","theme_color":"%230b1626","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/2331/2331941.png","sizes":"512x512","type":"image/png"}]}'>
 <style>
 body{margin:0;font-family:-apple-system,system-ui,Arial;background:#0b1626;color:#eef3fa;padding:18px}
 .wrap{max-width:430px;margin:0 auto}
@@ -35,8 +38,11 @@ td{padding:7px 4px;border-bottom:1px solid #1b3050}
 <script>
 var API="https://script.google.com/macros/s/AKfycbx1URc6Udm8I_7uuP5XYJX__C-9moEJs9cEbU_HNpJ3zpNO65apgkPnZEo_kj7GPNsN/exec";
 var KEY="RIV2026";
+var urinish=0,timer=null;
 function n(x){return (x||0).toLocaleString("ru-RU");}
 function chizish(d){
+  if(timer){clearTimeout(timer);timer=null;}
+  urinish=0;
   document.getElementById("vaqt").textContent=d.vaqt;
   var h="";
   d.kartalar.forEach(function(k){
@@ -54,11 +60,16 @@ function chizish(d){
   });
   document.getElementById("ops").innerHTML=o;
 }
+function qayta(){ if(urinish<4){yukla();} else {document.getElementById("vaqt").textContent="⚠️ Server javob bermadi — Yangilash tugmasini bosing";urinish=0;} }
 function yukla(){
-  document.getElementById("vaqt").textContent="yuklanmoqda…";
+  urinish++;
+  document.getElementById("vaqt").textContent=urinish>1?("yuklanmoqda… ("+urinish+")"):"yuklanmoqda…";
   var s=document.createElement("script");
   s.src=API+"?key="+KEY+"&json=1&callback=chizish&t="+Date.now();
+  s.onerror=qayta;
   document.body.appendChild(s);
+  if(timer)clearTimeout(timer);
+  timer=setTimeout(qayta,9000);
 }
 yukla();
 </script>
