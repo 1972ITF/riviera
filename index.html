@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RIVIERA · PUL</title>
+<meta name="theme-color" content="#0b1626">
+<link rel="manifest" href='data:application/manifest+json,{"name":"RIVIERA","short_name":"RIVIERA","start_url":".","display":"standalone","background_color":"%230b1626","theme_color":"%230b1626","icons":[{"src":"https://cdn-icons-png.flaticon.com/192/2active.png","sizes":"192x192","type":"image/png"}]}'>
+<style>
+body{margin:0;font-family:-apple-system,system-ui,Arial;background:#0b1626;color:#eef3fa;padding:18px}
+.wrap{max-width:430px;margin:0 auto}
+h1{font-size:15px;letter-spacing:3px;color:#7fa8d9;margin:0}
+.vaqt{font-size:12px;color:#54708f;margin:3px 0 16px}
+.card{background:#13253d;border-radius:14px;padding:13px 16px;margin-bottom:10px}
+.t{font-size:13px;color:#7fa8d9}.t span{color:#54708f}
+.v{font-size:25px;font-weight:700;margin-top:3px}.v small{font-size:13px;color:#7fa8d9;font-weight:400}
+.jami{background:#173a5e;border:1px solid #2c5c8f}
+.dol{font-size:13px;color:#9fc3ea;margin:2px 0 0}
+h2{font-size:12px;letter-spacing:2px;color:#7fa8d9;margin:20px 0 8px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td{padding:7px 4px;border-bottom:1px solid #1b3050}
+.g{color:#4cd97b;text-align:right}.r{color:#ff8080;text-align:right}
+.btn{display:block;text-align:center;margin-top:18px;padding:12px;background:#1d4a75;color:#fff;border-radius:12px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>RIVIERA · PUL</h1>
+  <div class="vaqt" id="vaqt">yuklanmoqda…</div>
+  <div id="cards"></div>
+  <h2>OXIRGI OPERATSIYALAR</h2>
+  <table id="ops"></table>
+  <div class="btn" onclick="yukla()">🔄 Yangilash</div>
+</div>
+<script>
+var API="https://script.google.com/macros/s/AKfycbx1URc6Udm8I_7uuP5XYJX__C-9moEJs9cEbU_HNpJ3zpNO65apgkPnZEo_kj7GPNsN/exec";
+var KEY="RIV2026";
+function n(x){return (x||0).toLocaleString("ru-RU");}
+function chizish(d){
+  document.getElementById("vaqt").textContent=d.vaqt;
+  var h="";
+  d.kartalar.forEach(function(k){
+    h+='<div class="card"><div class="t">'+k.nom+' <span>· '+(k.izoh||"")+'</span></div>'+
+       '<div class="v">'+n(k.summa)+'<small> so\'m</small></div></div>';
+  });
+  h+='<div class="card jami"><div class="t">JAMI</div><div class="v">'+n(d.jami)+'<small> so\'m</small></div>'+
+     '<div class="dol">'+(d.kurs?("≈ "+(d.jami/d.kurs).toLocaleString("ru-RU",{maximumFractionDigits:2})+" $ · kurs "+n(d.kurs)):"⚠️ bugungi kurs yozilmagan")+'</div></div>';
+  document.getElementById("cards").innerHTML=h;
+  var o="";
+  d.ops.forEach(function(p){
+    var kir=(p.yon==="KIRIM");
+    o+='<tr><td>'+p.sana+'</td><td>'+p.karta+'</td><td>'+p.nom+'</td>'+
+       '<td class="'+(kir?"g":"r")+'">'+(kir?"+":"−")+n(p.summa)+'</td></tr>';
+  });
+  document.getElementById("ops").innerHTML=o;
+}
+function yukla(){
+  document.getElementById("vaqt").textContent="yuklanmoqda…";
+  var s=document.createElement("script");
+  s.src=API+"?key="+KEY+"&json=1&callback=chizish&t="+Date.now();
+  document.body.appendChild(s);
+}
+yukla();
+</script>
+</body>
+</html>
