@@ -6,8 +6,8 @@
 <title>RIVIERA · PUL</title>
 <meta name="theme-color" content="#0b1626">
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%230b1626'/%3E%3Ctext x='256' y='355' font-size='300' font-family='Georgia,serif' font-weight='bold' fill='%23d4af37' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%230b1626'/%3E%3Ctext x='256' y='355' font-size='300' font-family='Georgia,serif' font-weight='bold' fill='%23d4af37' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
 <link rel="manifest" href="manifest.json">
 <style>
 body{margin:0;font-family:-apple-system,system-ui,Arial;background:#0b1626;color:#eef3fa;padding:18px}
@@ -22,7 +22,7 @@ h1{font-size:15px;letter-spacing:3px;color:#7fa8d9;margin:0}
 h2{font-size:12px;letter-spacing:2px;color:#7fa8d9;margin:20px 0 8px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 td{padding:7px 4px;border-bottom:1px solid #1b3050}
-.g{color:#4cd97b;text-align:right}.r{color:#ff8080;text-align:right}
+.g{color:#4cd97b;text-align:right}.r{color:#ff8080;text-align:right}.m{color:#8ba3bf;text-align:right}
 .btn{display:block;text-align:center;margin-top:18px;padding:12px;background:#1d4a75;color:#fff;border-radius:12px;cursor:pointer}
 </style>
 </head>
@@ -55,9 +55,12 @@ function yukla(){
     document.getElementById("cards").innerHTML=h;
     var o="";
     d.ops.forEach(function(p){
-      var kir=(p.yon==="KIRIM");
-      o+='<tr><td>'+p.sana+'</td><td>'+p.karta+'</td><td>'+p.nom+'</td>'+
-         '<td class="'+(kir?"g":"r")+'">'+(kir?"+":"−")+n(p.summa)+'</td></tr>';
+      var kir=(p.yon==="KIRIM"), koch=(p.yon==="KO'CHIRISH");
+      var belgi=koch?"🔄":(kir?"⬇":"⬆");
+      var klass=koch?"m":(kir?"g":"r");
+      var ishora=koch?"":(kir?"+":"−");
+      o+='<tr><td>'+p.sana+'</td><td>'+belgi+' '+p.karta+'</td><td>'+p.nom+'</td>'+
+         '<td class="'+klass+'">'+ishora+n(p.summa)+'</td></tr>';
     });
     document.getElementById("ops").innerHTML=o;
   };
