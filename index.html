@@ -36,40 +36,33 @@ td{padding:7px 4px;border-bottom:1px solid #1b3050}
   <div class="btn" onclick="yukla()">🔄 Yangilash</div>
 </div>
 <script>
-var API="https://script.google.com/macros/s/AKfycbx1URc6Udm8I_7uuP5XYJX__C-9moEJs9cEbU_HNpJ3zpNO65apgkPnZEo_kj7GPNsN/exec";
-var KEY="RIV2026";
-var urinish=0,timer=null;
 function n(x){return (x||0).toLocaleString("ru-RU");}
-function chizish(d){
-  if(timer){clearTimeout(timer);timer=null;}
-  urinish=0;
-  document.getElementById("vaqt").textContent=d.vaqt;
-  var h="";
-  d.kartalar.forEach(function(k){
-    h+='<div class="card"><div class="t">'+k.nom+' <span>· '+(k.izoh||"")+'</span></div>'+
-       '<div class="v">'+n(k.summa)+'<small> so\'m</small></div></div>';
-  });
-  h+='<div class="card jami"><div class="t">JAMI</div><div class="v">'+n(d.jami)+'<small> so\'m</small></div>'+
-     '<div class="dol">'+(d.kurs?("≈ "+(d.jami/d.kurs).toLocaleString("ru-RU",{maximumFractionDigits:2})+" $ · kurs "+n(d.kurs)):"⚠️ bugungi kurs yozilmagan")+'</div></div>';
-  document.getElementById("cards").innerHTML=h;
-  var o="";
-  d.ops.forEach(function(p){
-    var kir=(p.yon==="KIRIM");
-    o+='<tr><td>'+p.sana+'</td><td>'+p.karta+'</td><td>'+p.nom+'</td>'+
-       '<td class="'+(kir?"g":"r")+'">'+(kir?"+":"−")+n(p.summa)+'</td></tr>';
-  });
-  document.getElementById("ops").innerHTML=o;
-}
-function qayta(){ if(urinish<4){yukla();} else {document.getElementById("vaqt").textContent="⚠️ Server javob bermadi — Yangilash tugmasini bosing";urinish=0;} }
 function yukla(){
-  urinish++;
-  document.getElementById("vaqt").textContent=urinish>1?("yuklanmoqda… ("+urinish+")"):"yuklanmoqda…";
-  var s=document.createElement("script");
-  s.src=API+"?key="+KEY+"&json=1&callback=chizish&t="+Date.now();
-  s.onerror=qayta;
-  document.body.appendChild(s);
-  if(timer)clearTimeout(timer);
-  timer=setTimeout(qayta,9000);
+  document.getElementById("vaqt").textContent="yuklanmoqda…";
+  var x=new XMLHttpRequest();
+  x.open("GET","data.json?t="+Date.now(),true);
+  x.onload=function(){
+    if(x.status!==200){document.getElementById("vaqt").textContent="⚠️ data.json topilmadi";return;}
+    var d=JSON.parse(x.responseText);
+    document.getElementById("vaqt").textContent=d.vaqt;
+    var h="";
+    d.kartalar.forEach(function(k){
+      h+='<div class="card"><div class="t">'+k.nom+' <span>· '+(k.izoh||"")+'</span></div>'+
+         '<div class="v">'+n(k.summa)+'<small> so\'m</small></div></div>';
+    });
+    h+='<div class="card jami"><div class="t">JAMI</div><div class="v">'+n(d.jami)+'<small> so\'m</small></div>'+
+       '<div class="dol">'+(d.kurs?("≈ "+(d.jami/d.kurs).toLocaleString("ru-RU",{maximumFractionDigits:2})+" $ · kurs "+n(d.kurs)):"⚠️ bugungi kurs yozilmagan")+'</div></div>';
+    document.getElementById("cards").innerHTML=h;
+    var o="";
+    d.ops.forEach(function(p){
+      var kir=(p.yon==="KIRIM");
+      o+='<tr><td>'+p.sana+'</td><td>'+p.karta+'</td><td>'+p.nom+'</td>'+
+         '<td class="'+(kir?"g":"r")+'">'+(kir?"+":"−")+n(p.summa)+'</td></tr>';
+    });
+    document.getElementById("ops").innerHTML=o;
+  };
+  x.onerror=function(){document.getElementById("vaqt").textContent="⚠️ Internet yo'q";};
+  x.send();
 }
 yukla();
 </script>
