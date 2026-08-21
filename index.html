@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RIVIERA · PUL</title>
+<title>RIVIERA</title>
 <meta name="theme-color" content="#0b1626">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" href="icon.svg">
@@ -13,30 +13,72 @@
 body{margin:0;font-family:-apple-system,system-ui,Arial;background:#0b1626;color:#eef3fa;padding:18px}
 .wrap{max-width:430px;margin:0 auto}
 h1{font-size:15px;letter-spacing:3px;color:#7fa8d9;margin:0}
-.vaqt{font-size:12px;color:#54708f;margin:3px 0 16px}
+.vaqt{font-size:12px;color:#54708f;margin:3px 0 14px}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tab{flex:1;text-align:center;padding:9px 0;border-radius:10px;background:#13253d;color:#54708f;font-size:13px;cursor:pointer}
+.tab.on{background:#1d4a75;color:#eef3fa}
 .card{background:#13253d;border-radius:14px;padding:13px 16px;margin-bottom:10px}
 .t{font-size:13px;color:#7fa8d9}.t span{color:#54708f}
 .v{font-size:25px;font-weight:700;margin-top:3px}.v small{font-size:13px;color:#7fa8d9;font-weight:400}
 .jami{background:#173a5e;border:1px solid #2c5c8f}
 .dol{font-size:13px;color:#9fc3ea;margin:2px 0 0}
-h2{font-size:12px;letter-spacing:2px;color:#7fa8d9;margin:20px 0 8px}
+.big{font-size:34px;font-weight:700;margin-top:2px;letter-spacing:-0.5px}
+.note{font-size:11px;color:#54708f;margin-top:6px}
+.row2{display:flex;gap:8px;margin-bottom:14px}
+.box{flex:1;background:#13253d;border-radius:14px;padding:11px 13px}
+.box .l{font-size:11px;color:#7fa8d9}
+.box .bv{font-size:19px;font-weight:700;margin-top:2px}
+.box .bv small{font-size:11px;color:#7fa8d9;font-weight:400}
+.box.dv{background:#0f1d31;border:1px solid #1b3050}
+.box.dv .l,.box.dv .bv{color:#8ba3bf}
+.box.dv .n{font-size:10px;color:#54708f;margin-top:3px}
+h2{font-size:12px;letter-spacing:2px;color:#7fa8d9;margin:16px 0 6px}
 table{width:100%;border-collapse:collapse;font-size:13px}
-td{padding:7px 4px;border-bottom:1px solid #1b3050}
+td{padding:8px 3px;border-bottom:1px solid #1b3050;vertical-align:top}
+th{padding:4px 3px;border-bottom:1px solid #2c5c8f;font-size:11px;color:#7fa8d9;font-weight:400;text-align:right}
+th.l{text-align:left}
+.kod{font-weight:700}
+.nom{display:block;color:#54708f;font-size:11px;margin-top:3px}
 .g{color:#4cd97b;text-align:right}.r{color:#ff8080;text-align:right}.m{color:#8ba3bf;text-align:right}
+.kg{text-align:right;white-space:nowrap}
+.pul{text-align:right;color:#9fc3ea;white-space:nowrap}
 .btn{display:block;text-align:center;margin-top:18px;padding:12px;background:#1d4a75;color:#fff;border-radius:12px;cursor:pointer}
+.hid{display:none}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>RIVIERA · PUL</h1>
+  <h1>RIVIERA</h1>
   <div class="vaqt" id="vaqt">yuklanmoqda…</div>
-  <div id="cards"></div>
-  <h2>OXIRGI OPERATSIYALAR</h2>
-  <table id="ops"></table>
+
+  <div class="tabs">
+    <div class="tab on" id="tPul" onclick="tanla('pul')">PUL</div>
+    <div class="tab" id="tSkl" onclick="tanla('skl')">SKLAD</div>
+    <div class="tab" id="tSex" onclick="tanla('sex')">SEX</div>
+  </div>
+
+  <div id="pul">
+    <div id="cards"></div>
+    <h2>OXIRGI OPERATSIYALAR</h2>
+    <table id="ops"></table>
+  </div>
+
+  <div id="skl" class="hid"></div>
+
+  <div id="sex" class="hid">
+    <div class="card"><div class="t">SEX</div><div class="dol">tayyorlanmoqda</div></div>
+  </div>
+
   <div class="btn" onclick="yukla()">🔄 Yangilash</div>
 </div>
 <script>
-function n(x){return (x||0).toLocaleString("ru-RU");}
+function n(x){return Math.round(x||0).toLocaleString("ru-RU");}
+function tanla(k){
+  ["pul","skl","sex"].forEach(function(x){document.getElementById(x).className=(x===k)?"":"hid";});
+  document.getElementById("tPul").className="tab"+(k==="pul"?" on":"");
+  document.getElementById("tSkl").className="tab"+(k==="skl"?" on":"");
+  document.getElementById("tSex").className="tab"+(k==="sex"?" on":"");
+}
 function yukla(){
   document.getElementById("vaqt").textContent="yuklanmoqda…";
   var x=new XMLHttpRequest();
@@ -63,6 +105,23 @@ function yukla(){
          '<td class="'+klass+'">'+ishora+n(p.summa)+'</td></tr>';
     });
     document.getElementById("ops").innerHTML=o;
+    var s=d.sklad, sh="";
+    if(!s){ sh='<div class="card"><div class="t">SKLAD</div><div class="dol">⚠️ ma\'lumot yo\'q</div></div>'; }
+    else{
+      sh='<div class="card jami"><div class="t">XOMASHYO OMBORI</div>'+
+         '<div class="big">$ '+n(s.pul)+'</div>'+
+         '<div class="dol">'+n(s.kg)+' kg · '+s.poz+' tur</div>'+
+         '<div class="note">o\'rtacha xarid narxi bo\'yicha · daval kirmaydi</div></div>'+
+         '<div class="row2"><div class="box"><div class="l">O\'ZIMIZNIKI</div><div class="bv">'+n(s.kg)+'<small> kg</small></div></div>'+
+         '<div class="box dv"><div class="l">DAVAL</div><div class="bv">'+n(s.daval)+'<small> kg</small></div><div class="n">bizniki emas</div></div></div>'+
+         '<h2>TURLAR BO\'YICHA</h2><table><tr><th class="l"></th><th>kg</th><th>$</th></tr>';
+      s.top.forEach(function(p){
+        sh+='<tr><td><span class="kod">'+p.kod+'</span>'+(p.nomi?'<span class="nom">'+p.nomi+'</span>':'')+
+            '</td><td class="kg">'+n(p.kg)+'</td><td class="pul">'+n(p.summa)+'</td></tr>';
+      });
+      sh+='</table>';
+    }
+    document.getElementById("skl").innerHTML=sh;
   };
   x.onerror=function(){document.getElementById("vaqt").textContent="⚠️ Internet yo'q";};
   x.send();
