@@ -55,6 +55,8 @@ th.l{text-align:left}
 .sx .nm{font-size:13px;color:#7fa8d9;font-weight:700}
 .sx .ln{display:flex;justify-content:space-between;font-size:12px;color:#8ba3bf;margin-top:5px}
 .sx .ln b{font-weight:700}
+.hd{display:flex;justify-content:space-between;align-items:baseline}
+.hd .dt{font-size:19px;font-weight:700;color:#9fc3ea}
 </style>
 </head>
 <body>
@@ -98,6 +100,8 @@ function yukla(){
     if(x.status!==200){document.getElementById("vaqt").textContent="⚠️ data.json topilmadi";return;}
     var d=JSON.parse(x.responseText);
     document.getElementById("vaqt").textContent=d.vaqt;
+    var yil="";
+    try{yil="."+d.vaqt.split(" ")[0].split(".")[2].slice(2);}catch(e){yil="";}
     var h="";
     d.kartalar.forEach(function(k){
       h+='<div class="card"><div class="t">'+k.nom+' <span>· '+(k.izoh||"")+'</span></div>'+
@@ -136,7 +140,7 @@ function yukla(){
     var e=d.sex, eh="";
     if(!e){ eh='<div class="card"><div class="t">SEX</div><div class="dol">⚠️ ma\'lumot yo\'q</div></div>'; }
     else{
-      eh='<div class="card jami"><div class="t">FABRIKA <span>· '+e.sana+'</span></div>'+
+      eh='<div class="card jami"><div class="hd"><span class="t">KUNLIK</span><span class="dt">'+e.sana+yil+'</span></div>'+
          '<div class="pr '+pk(e.kun.jami.foiz)+'">'+pf(e.kun.jami.foiz)+'</div>'+
          '<div class="dol">'+n(e.kun.jami.fakt)+' / '+n(e.kun.jami.norma)+' kg</div></div>'+
          '<div class="sm">'+
@@ -146,7 +150,7 @@ function yukla(){
          '<div class="card"><div class="t">OY BOSHIDAN</div>'+
          '<div class="pr '+pk(e.oy.foiz)+'">'+pf(e.oy.foiz)+'</div>'+
          '<div class="dol">'+n(e.oy.fakt)+' / '+n(e.oy.norma)+' kg</div>'+
-         '<div class="note">'+e.kunSoni+' kun · oxirgi kiritish: '+e.sana+', '+e.smena+'-smena</div></div>'+
+         '<div class="note">'+e.kunSoni+' kun · oxirgi kiritish: '+e.sana+yil+', '+e.smena+'-smena</div></div>'+
          '<h2>SEXLAR BO\'YICHA</h2>';
       e.sexlar.forEach(function(c){
         eh+='<div class="sx"><div class="nm">'+c.nom+' <span class="'+pk(c.jami.foiz)+'">'+pf(c.jami.foiz)+'</span></div>'+
