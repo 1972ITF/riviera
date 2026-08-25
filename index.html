@@ -44,6 +44,17 @@ th.l{text-align:left}
 .pul{text-align:right;color:#9fc3ea;white-space:nowrap}
 .btn{display:block;text-align:center;margin-top:18px;padding:12px;background:#1d4a75;color:#fff;border-radius:12px;cursor:pointer}
 .hid{display:none}
+.pr{font-size:38px;font-weight:700;letter-spacing:-1px;margin-top:2px}
+.ok{color:#4cd97b}.bad{color:#ff8080}.neu{color:#eef3fa}
+.sm{display:flex;gap:8px;margin-bottom:10px}
+.sm .b2{flex:1;background:#13253d;border-radius:14px;padding:10px 12px}
+.sm .l{font-size:11px;color:#7fa8d9}
+.sm .sv{font-size:18px;font-weight:700;margin-top:2px}
+.sm .kk{font-size:10px;color:#54708f;margin-top:2px}
+.sx{background:#13253d;border-radius:14px;padding:11px 14px;margin-bottom:8px}
+.sx .nm{font-size:13px;color:#7fa8d9;font-weight:700}
+.sx .ln{display:flex;justify-content:space-between;font-size:12px;color:#8ba3bf;margin-top:5px}
+.sx .ln b{font-weight:700}
 </style>
 </head>
 <body>
@@ -65,14 +76,14 @@ th.l{text-align:left}
 
   <div id="skl" class="hid"></div>
 
-  <div id="sex" class="hid">
-    <div class="card"><div class="t">SEX</div><div class="dol">tayyorlanmoqda</div></div>
-  </div>
+  <div id="sex" class="hid"></div>
 
   <div class="btn" onclick="yukla()">🔄 Yangilash</div>
 </div>
 <script>
 function n(x){return Math.round(x||0).toLocaleString("ru-RU");}
+function pf(x){return x===null||x===undefined?"—":(x*100).toFixed(1).replace(".",",")+"%";}
+function pk(x){if(x===null||x===undefined)return"neu";if(x<0.9)return"bad";if(x>=1)return"ok";return"neu";}
 function tanla(k){
   ["pul","skl","sex"].forEach(function(x){document.getElementById(x).className=(x===k)?"":"hid";});
   document.getElementById("tPul").className="tab"+(k==="pul"?" on":"");
@@ -122,6 +133,29 @@ function yukla(){
       sh+='</table>';
     }
     document.getElementById("skl").innerHTML=sh;
+    var e=d.sex, eh="";
+    if(!e){ eh='<div class="card"><div class="t">SEX</div><div class="dol">⚠️ ma\'lumot yo\'q</div></div>'; }
+    else{
+      eh='<div class="card jami"><div class="t">FABRIKA <span>· '+e.sana+'</span></div>'+
+         '<div class="pr '+pk(e.kun.jami.foiz)+'">'+pf(e.kun.jami.foiz)+'</div>'+
+         '<div class="dol">'+n(e.kun.jami.fakt)+' / '+n(e.kun.jami.norma)+' kg</div></div>'+
+         '<div class="sm">'+
+         '<div class="b2"><div class="l">1-SMENA</div><div class="sv '+pk(e.kun.s1.foiz)+'">'+pf(e.kun.s1.foiz)+'</div><div class="kk">'+n(e.kun.s1.fakt)+' / '+n(e.kun.s1.norma)+'</div></div>'+
+         '<div class="b2"><div class="l">2-SMENA</div><div class="sv '+pk(e.kun.s2.foiz)+'">'+pf(e.kun.s2.foiz)+'</div><div class="kk">'+n(e.kun.s2.fakt)+' / '+n(e.kun.s2.norma)+'</div></div>'+
+         '</div>'+
+         '<div class="card"><div class="t">OY BOSHIDAN</div>'+
+         '<div class="pr '+pk(e.oy.foiz)+'">'+pf(e.oy.foiz)+'</div>'+
+         '<div class="dol">'+n(e.oy.fakt)+' / '+n(e.oy.norma)+' kg</div>'+
+         '<div class="note">'+e.kunSoni+' kun · oxirgi kiritish: '+e.sana+', '+e.smena+'-smena</div></div>'+
+         '<h2>SEXLAR BO\'YICHA</h2>';
+      e.sexlar.forEach(function(c){
+        eh+='<div class="sx"><div class="nm">'+c.nom+' <span class="'+pk(c.jami.foiz)+'">'+pf(c.jami.foiz)+'</span></div>'+
+            '<div class="ln"><span>1-smena</span><b class="'+pk(c.s1.foiz)+'">'+pf(c.s1.foiz)+'</b></div>'+
+            '<div class="ln"><span>2-smena</span><b class="'+pk(c.s2.foiz)+'">'+pf(c.s2.foiz)+'</b></div>'+
+            '<div class="ln"><span>kun jami</span><b>'+n(c.jami.fakt)+' / '+n(c.jami.norma)+' kg</b></div></div>';
+      });
+    }
+    document.getElementById("sex").innerHTML=eh;
   };
   x.onerror=function(){document.getElementById("vaqt").textContent="⚠️ Internet yo'q";};
   x.send();
